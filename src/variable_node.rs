@@ -77,8 +77,8 @@ where
                 false
             } else {
                 match self.needs_all_inputs {
-                    InputNeed::AlwaysExceptFirst => !self.has_propagated && self.prior.is_some(),
-                    InputNeed::NeverExceptFirst => self.has_propagated && self.prior.is_some(),
+                    InputNeed::AlwaysExceptFirst => !self.has_propagated,
+                    InputNeed::NeverExceptFirst => self.has_propagated,
                     InputNeed::Never => true,
                     InputNeed::Always => false,
                 }
