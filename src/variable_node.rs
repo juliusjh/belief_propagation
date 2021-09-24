@@ -106,18 +106,18 @@ where
         self.has_propagated = true;
         if inbox.is_empty() {
             if let Some(prior) = &self.prior {
-                return Ok(connections
+                Ok(connections
                     .iter()
                     .map(|idx| (*idx, prior.clone()))
-                    .collect());
+                    .collect())
             } else {
-                return Err(BPError::new(
+                Err(BPError::new(
                     "VariableNode::node_function".to_owned(),
                     "Inbox is empty".to_owned(),
-                ));
+                ))
             }
         }
-        if inbox.len() == 1 {
+        else if inbox.len() == 1 {
             let (idx_in, mut msg_in) = inbox.pop().unwrap();
             let mut out: Vec<(NodeIndex, MsgT)> = Vec::new();
             if let Some(prior) = &self.prior {
@@ -129,28 +129,32 @@ where
                     out.push((*con, msg_in.clone()));
                 }
             }
-            return Ok(out);
+            Ok(out)
         }
-        let mut result: Vec<(NodeIndex, MsgT)> = Vec::with_capacity(connections.len());
-        let n = connections.len();
-        let (mut acc, start) =
-        if let Some(prior) = &self.prior {
-            (prior.clone(), 0)
+        else if connections.len() == inbox.len() {
+            let mut result: Vec<(NodeIndex, MsgT)> = Vec::with_capacity(connections.len());
+            let n = connections.len();
+            let (mut acc, start) =
+            if let Some(prior) = &self.prior {
+                (prior.clone(), 0)
+            }
+            else {
+                result.push((inbox[0].0, inbox[0].1.clone()));
+                (inbox[0].1.clone(), 1)
+            };
+            for msg in &inbox[start..] {
+                result.push((msg.0, acc.clone()));
+                acc.mult_msg(&msg.1);
+            }
+            acc = inbox[n - 1].1.clone();
+            for msg in result[..n-1].iter_mut().rev() {
+                msg.1.mult_msg(&acc);
+                acc.mult_msg(&msg.1);
+            }
+            Ok(result)
         }
         else {
-            result.push((inbox[0].0, inbox[0].1.clone()));
-            (inbox[0].1.clone(), 1)
-        };
-        for msg in &inbox[start..] {
-            result.push((msg.0, acc.clone()));
-            acc.mult_msg(&msg.1);
         }
-        acc = inbox[n - 1].1.clone();
-        for msg in result[..n-1].iter_mut().rev() {
-            msg.1.mult_msg(&acc);
-            acc.mult_msg(&msg.1);
-        }
-        Ok(result)
     }
 
     fn reset(&mut self) -> BPResult<()> {
