@@ -415,7 +415,7 @@ where
         info_print!("Creating messages");
         let outgoing_msgs = self.create_messages()?;
         info_print!("Sending messages");
-        self.send(outgoing_msgs);
+        self.send(outgoing_msgs)?;
         info_print!("Done propagating step {}\n", self.step);
         self.step += 1;
         Ok(())
