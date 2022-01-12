@@ -489,6 +489,10 @@ where
         Ok(())
     }
 
+    pub fn reserve(&mut self, number_nodes: usize) {
+        self.nodes.reserve(number_nodes);
+    }
+
     pub fn add_node(
         &mut self,
         name: String,
