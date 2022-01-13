@@ -505,6 +505,11 @@ where
         self.nodes.len() - 1
     }
 
+    pub fn add_node_directly(&mut self, node: Node<T, MsgT, CtrlMsgT, CtrlMsgAT>) -> NodeIndex {
+        self.nodes.push(node);
+        self.nodes.len() - 1
+    }
+
     pub fn add_edge(&mut self, node0: NodeIndex, node1: NodeIndex) -> BPResult<()> {
         debug_print!("Connecting nodes {} and {}", node0, node1);
         if self.get_node(node0)?.is_factor() == self.get_node(node1)?.is_factor() {
