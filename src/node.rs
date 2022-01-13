@@ -98,6 +98,10 @@ where
     pub fn get_connections(&self) -> &Vec<NodeIndex> {
         &self.connections
     }
+
+    pub fn get_connections_mut(&mut self) -> &mut Vec<NodeIndex> {
+        &mut self.connections
+    }
     pub fn is_factor(&self) -> bool {
         self.node_function.is_factor()
     }
