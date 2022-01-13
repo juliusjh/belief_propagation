@@ -26,7 +26,7 @@ pub struct VariableNode<T, MsgT: Msg<T>> {
 
 impl<T, MsgT: Msg<T>> VariableNode<T, MsgT>
 where
-    MsgT: Clone
+    MsgT: Clone,
 {
     #[allow(dead_code)]
     pub fn new() -> Self {
@@ -122,8 +122,7 @@ where
                     "Inbox is empty".to_owned(),
                 ))
             }
-        }
-        else if inbox.len() == 1 {
+        } else if inbox.len() == 1 {
             let (idx_in, mut msg_in) = inbox.pop().unwrap();
             let mut out: Vec<(NodeIndex, MsgT)> = Vec::new();
             if let Some(prior) = &self.prior {
@@ -136,15 +135,12 @@ where
                 }
             }
             Ok(out)
-        }
-        else if inbox.len() == connections.len() || !self.send_to_all {
+        } else if inbox.len() == connections.len() || !self.send_to_all {
             let mut result: Vec<(NodeIndex, MsgT)> = Vec::with_capacity(inbox.len());
             let n = inbox.len();
-            let (mut acc, start) =
-            if let Some(prior) = &self.prior {
+            let (mut acc, start) = if let Some(prior) = &self.prior {
                 (prior.clone(), 0)
-            }
-            else {
+            } else {
                 (inbox[0].1.clone(), 1)
             };
             for msg in &inbox[start..] {
@@ -152,24 +148,21 @@ where
                 acc.mult_msg(&msg.1);
             }
             acc = inbox[n - 1].1.clone();
-            for idx in (0..n-1-start).rev() {
+            for idx in (0..n - 1 - start).rev() {
                 result[idx].1.mult_msg(&acc);
-                acc.mult_msg(&inbox[idx+start].1);
+                acc.mult_msg(&inbox[idx + start].1);
             }
             if start == 1 {
                 result.push((inbox[0].0, acc.clone()));
             }
             Ok(result)
-        }
-        else {
+        } else {
             let mut result: Vec<(NodeIndex, MsgT)> = Vec::with_capacity(connections.len());
             let mut missing = connections.clone();
             let n = inbox.len();
-            let (mut acc, start) =
-            if let Some(prior) = &self.prior {
+            let (mut acc, start) = if let Some(prior) = &self.prior {
                 (prior.clone(), 0)
-            }
-            else {
+            } else {
                 missing.retain(|idx| *idx != inbox[0].0);
                 (inbox[0].1.clone(), 1)
             };
@@ -179,9 +172,9 @@ where
                 missing.retain(|idx| *idx != msg.0);
             }
             acc = inbox[n - 1].1.clone();
-            for idx in (0..n-1-start).rev() {
+            for idx in (0..n - 1 - start).rev() {
                 result[idx].1.mult_msg(&acc);
-                acc.mult_msg(&inbox[idx+start].1);
+                acc.mult_msg(&inbox[idx + start].1);
             }
             if start == 1 {
                 result.push((inbox[0].0, acc.clone()));
@@ -192,7 +185,6 @@ where
                 result.push((idx, acc.clone()));
             }
             Ok(result)
-
         }
     }
 

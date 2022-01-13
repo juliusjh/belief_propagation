@@ -2,9 +2,7 @@ use crate::{BPResult, Msg, NodeIndex, Probability};
 use std::default::Default;
 use std::fmt::Debug;
 
-pub trait NodeFunction<T, MsgT: Msg<T>, CtrlMsgT = (), CtrlMsgAT: Default = ()>
-where
-{
+pub trait NodeFunction<T, MsgT: Msg<T>, CtrlMsgT = (), CtrlMsgAT: Default = ()> {
     fn node_function(&mut self, inbox: Vec<(NodeIndex, MsgT)>) -> BPResult<Vec<(NodeIndex, MsgT)>>;
     fn is_factor(&self) -> bool;
     fn number_inputs(&self) -> Option<usize>;
