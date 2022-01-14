@@ -157,7 +157,8 @@ where
                                             from, to
                                         ),
                                     )
-                                    .attach_debug_object("step", step));
+                                    .attach_debug_object("step", step)
+                                    .attach_debug_object("edges", nto.get_connections()));
                                 }
                                 nto.send_post(from, msg);
                             }
