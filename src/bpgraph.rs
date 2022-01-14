@@ -158,7 +158,8 @@ where
                                         ),
                                     )
                                     .attach_debug_object("step", step)
-                                    .attach_debug_object("edges", nto.get_connections()));
+                                    .attach_debug_object("edges", nto.get_connections())
+                                    .attach_debug_object("name of node to sending to", nto.get_name()));
                                 }
                                 nto.send_post(from, msg);
                             }
@@ -465,7 +466,8 @@ where
                         ),
                     )
                     .attach_debug_object("step", step)
-                    .attach_debug_object("edges", nto.get_connections()));
+                    .attach_debug_object("edges", nto.get_connections())
+                    .attach_debug_object("name of node to sending to", nto.get_name()));
                 }
                 if normalize {
                     msg.normalize().map_err(|e| {
