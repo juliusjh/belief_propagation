@@ -153,7 +153,7 @@ where
                                     return Err(BPError::new(
                                         "BPGraph::send".to_owned(),
                                         format!(
-                                            "Trying to send a message along a none existing edge ({} -> {}).",
+                                            "Trying to send a message along a non-existent edge ({} -> {}).",
                                             from, to
                                         ),
                                     )
@@ -290,7 +290,7 @@ where
         info_print!("Propagating step {}..", self.step);
         debug_print!("Creating messages..");
         let outgoing_msgs = self.create_messages_threaded(thread_count)?;
-        info_print!("Sending messages");
+        info_print!("Sending messages (threaded)");
         self.send_threaded(outgoing_msgs, thread_count)?;
         info_print!("Done propagating step {}\n", self.step);
         self.step += 1;
@@ -460,11 +460,12 @@ where
                     return Err(BPError::new(
                         "BPGraph::send".to_owned(),
                         format!(
-                            "Trying to send a message along a none existing edge ({} -> {}).",
+                            "Trying to send a message along a non-existent edge ({} -> {}).",
                             from, to
                         ),
                     )
-                    .attach_debug_object("step", step));
+                    .attach_debug_object("step", step)
+                    .attach_debug_object("edges", nto.get_connections()));
                 }
                 if normalize {
                     msg.normalize().map_err(|e| {
