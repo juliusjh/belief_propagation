@@ -16,6 +16,16 @@ where
     fn normalize(&mut self) -> BPResult<()>;
     fn is_valid(&self) -> bool;
     fn mult_msg(&mut self, other: &Self);
+    fn mult_msg_weighted(&mut self, other: &Self, alpha: f64) {
+        todo!("Not implemented.");
+    }
+    fn add_msg_weighted(&mut self, other: &Self, alpha_self: f64, alpha_other: f64) {
+        todo!("Not implemented.");
+    }
+    //.iter_mut would be preferable but makes things complicated as impl returns are not complete
+    fn for_each(&mut self, f: impl FnMut(Probability) -> Probability) {
+        todo!("Not implemented.");
+    }
 }
 /*
 impl<MsgT: Msg<T>, T: Clone> MultMsg<T> for MsgT
