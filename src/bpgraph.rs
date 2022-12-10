@@ -444,6 +444,11 @@ where
                     })?,
                 ));
             }
+            else {
+                if node.discard_mode() {
+                    node.read_post();
+                }
+            }
         }
         Ok(res)
     }

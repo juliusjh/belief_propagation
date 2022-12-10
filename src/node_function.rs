@@ -13,4 +13,7 @@ pub trait NodeFunction<T, MsgT: Msg<T>, CtrlMsgT = (), CtrlMsgAT: Default = ()> 
     fn send_control_message(&mut self, ctrl_msg: CtrlMsgT) -> BPResult<CtrlMsgAT> {
         Ok(CtrlMsgAT::default())
     }
+    fn discard_mode(&self) -> bool {
+        false
+    }
 }

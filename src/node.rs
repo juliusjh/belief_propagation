@@ -120,6 +120,9 @@ where
     pub fn is_ready(&self, step: usize) -> BPResult<bool> {
         self.node_function.is_ready(&self.inbox, step)
     }
+    pub fn discard_mode(&self) -> bool {
+        self.node_function.discard_mode()
+    }
     pub fn create_messages(&mut self) -> BPResult<Vec<(NodeIndex, MsgT)>> {
         let incoming_msgs = self.read_post();
         debug_print!(
