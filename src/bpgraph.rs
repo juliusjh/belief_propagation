@@ -187,12 +187,15 @@ where
     ) -> BPResult<Vec<(NodeIndex, Vec<(NodeIndex, MsgT)>)>> {
         info_print!("Creating messages with {} threads..", thread_count);
         let step = self.step;
-        let mut nodes_: Vec<(NodeIndex, &mut Node<T, MsgT, CtrlMsgT, CtrlMsgAT>)> = self
-            .nodes
-            .iter_mut()
-            .enumerate()
-            .filter(|(_, n)| n.is_ready(step).expect("Is ready failed"))
-            .collect();
+        let mut nodes_ = Vec::new();
+        for (i, n) in self.nodes.iter_mut().enumerate() {
+            if n.is_ready(step)? {
+                nodes_.push((i, n));
+            }
+            else {
+                n.read_post();
+            }
+        }
         let mut min_batch_size = 5;
         #[cfg(feature = "progress_output")]
         let (whitespace_padding, step) = {
